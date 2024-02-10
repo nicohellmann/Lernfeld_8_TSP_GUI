@@ -1,7 +1,4 @@
 from tkinter import *
-global linex1,liney1
-linex1 = 0
-liney1 = 0
 def quit(window):
     window.quit()
 
@@ -17,20 +14,20 @@ def click_corrdinates(event):
     y = (event.y)
     print(str(x) +'/' +str(y))
 
-def bind_points(event):
-    global x,y
-    can.create_line(x,y,event.x,event.y,fill="orange")
-    x = (event.x)
-    y = (event.y)
 
-def line_start(event):
-    global linex1,liney1
-    linex1,liney1 = event.x, event.y
 
-def line_done(event):
-    global linex2,liney2
-    linex2,liney2 = event.x, event.y
-    can.create_line(linex1,liney1,linex2,liney2)
+def draw_line(event):
+    global click_number
+    global x1,y1
+    if click_number==0:
+        x1 = event.x
+        y1 = event.y
+        click_number=1
+    else:
+        x2 = event.x
+        y2 = event.y
+        can.create_line(x1,y1,x2,y2,fill="blue")
+        click_number=0
 window = Tk()
 
 exit_button= Button(window,text="Exit",background="red",command=lambda:quit(window))
@@ -38,9 +35,10 @@ can = Canvas(window,width=500, height=500)
 exit_button.grid(row=0,column=0)
 can.bind("<Button-1>",click_corrdinates)
 can.bind("<Button-1>",draw_point)
-can.bind("<B1-Motion>",bind_points)
-can.bind("<Button-2>",line_start)
-can.bind("<ButtonRelease-2>",line_done)
+
+can.bind("<Button-3>",draw_line)
+click_number=0
+
 
 can.grid()
 mainloop()
