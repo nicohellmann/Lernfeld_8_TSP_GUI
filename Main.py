@@ -1,4 +1,6 @@
 from tkinter import *
+from Point import Point
+route = []
 def quit(window):
     window.quit()
 
