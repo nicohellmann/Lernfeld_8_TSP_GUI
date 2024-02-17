@@ -1,5 +1,6 @@
 from tkinter import *
 from Point import Point
+from itertools import permutations
 import random
 
 def quit(window):
@@ -48,11 +49,30 @@ def draw_line(event):
         y2 = event.y
         can.create_line(x1,y1,x2,y2,fill="blue")
         click_number=0
-
+def berechne_kuerzeste_route(punkte):
+    kuerzeste_route = None
+    kuerzeste_entfernung = float('inf')
+ 
+    for route in permutations(punkte):
+        entfernung = 0
+        for i in range(len(route) - 1):
+            entfernung += route[i].entfernung(route[i+1])
+ 
+        if entfernung < kuerzeste_entfernung:
+            kuerzeste_entfernung = entfernung
+            kuerzeste_route = route
+ 
+    return kuerzeste_route
 def tsp():
-    for i in range(len(route)-1):
-        can.create_line(route[i].x,route[i].y,route[i+1].x,route[i+1].y,fill="blue")
-    can.create_line(route[len(route)-1].x,route[len(route)-1].y,route[0].x,route[0].y,fill="blue")
+    path =berechne_kuerzeste_route(route)
+    line_count =1
+    for i in range(len(path)-1):
+        can.create_line(path[i].x,path[i].y,path[i+1].x,path[i+1].y,fill="blue")
+        can.create_text((path[i].x + path[i+1].x)/2,(path[i].y + path[i+1].y)/2,text=str(line_count) )
+        line_count+=1
+
+    can.create_line(path[len(path)-1].x,path[len(path)-1].y,path[0].x,path[0].y,fill="blue")
+    can.create_text(((path[len(path)-1].x + path[0].x)/2)+7,(path[len(path)-1].y + path[0].y)/2,text=str(line_count) )
 ####### --- window --- #######
 window = Tk()
 ####### --- Input --- #######
